@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy_financial as npf
 import plotly.graph_objects as go
 
 # Page setup
@@ -80,7 +79,7 @@ annual_income = revenue_per_year - (working_cost_annual + annual_payment)
 # === ROI and IRR ===
 roi = (annual_income / total_cost) * 100 if total_cost else 0
 cash_flows = [-total_cost] + [annual_income] * n_years
-irr = npf.irr(cash_flows) * 100 if cash_flows else 0
+
 
 # === Cumulative Cash Flow for Graphs ===
 cumulative_cash_flow = pd.Series(cash_flows).cumsum()
@@ -124,7 +123,6 @@ st.divider()
 st.subheader("📈 Project Returns")
 roi_cols = st.columns(2)
 roi_cols[0].metric(label="ROI (%)", value=f"{roi:.2f}%")
-roi_cols[1].metric(label="IRR (%)", value=f"{irr:.2f}%")
 
 # === Section 6: Visual – Revenue vs Cost ===
 st.divider()
