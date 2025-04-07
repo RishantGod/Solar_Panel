@@ -2,6 +2,29 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+
+
+def format_inr(amount):
+    """Formats the given amount using the Indian numbering system."""
+    # This function assumes the amount is a number (float or int)
+    # Convert to an integer string
+    s = str(int(round(amount)))
+    if len(s) > 3:
+        # Get the last 3 digits and then group the remaining digits in two
+        last3 = s[-3:]
+        rest = s[:-3]
+        parts = []
+        while len(rest) > 2:
+            parts.append(rest[-2:])
+            rest = rest[:-2]
+        if rest:
+            parts.append(rest)
+        parts.reverse()
+        formatted = ','.join(parts) + ',' + last3
+    else:
+        formatted = s
+    return f'₹{formatted}'
+
 # Page setup
 st.set_page_config(page_title="Solar Power Plant Dashboard", layout="wide")
 
@@ -89,34 +112,34 @@ years = list(range(n_years + 1))
 st.divider()
 st.subheader("💰 Revenue Summary")
 revenue_cols = st.columns(2)
-revenue_cols[0].metric(label="Monthly Revenue", value=f"₹{revenue_per_month:,.0f}")
-revenue_cols[1].metric(label="Annual Revenue", value=f"₹{revenue_per_year:,.0f}")
+revenue_cols[0].metric(label="Monthly Revenue", value=format_inr(revenue_per_month))
+revenue_cols[1].metric(label="Annual Revenue", value=format_inr(revenue_per_year))
 
 # === Section 2: Working Costs ===
 st.divider()
 st.subheader("🧾 Working Cost Summary")
 cost_cols = st.columns(2)
-cost_cols[0].metric(label="Monthly Working Cost", value=f"₹{working_cost_monthly:,.0f}")
-cost_cols[1].metric(label="Annual Working Cost", value=f"₹{working_cost_annual:,.0f}")
+cost_cols[0].metric(label="Monthly Working Cost", value=format_inr(working_cost_monthly))
+cost_cols[1].metric(label="Annual Working Cost", value=format_inr(working_cost_annual))
 
 # === Section 3: Capital & Loan ===
 st.divider()
 st.subheader("🏗️ Capital & Loan Breakdown")
 capital_cols = st.columns(3)
-capital_cols[0].metric(label="Total Project Cost", value=f"₹{total_cost:,.0f}")
-capital_cols[1].metric(label="Loan Amount", value=f"₹{loan_amount:,.0f}")
+capital_cols[0].metric(label="Total Project Cost", value=format_inr(total_cost))
+capital_cols[1].metric(label="Loan Amount", value=format_inr(loan_amount))
 capital_cols[2].metric(label="Debt Percentage", value=f"{debt_percent}%")
 
 repay_cols = st.columns(2)
-repay_cols[0].metric(label="Annual Loan Payment", value=f"₹{annual_payment:,.0f}")
-repay_cols[1].metric(label="Monthly Loan Payment", value=f"₹{monthly_payment:,.0f}")
+repay_cols[0].metric(label="Annual Loan Payment", value=format_inr(annual_payment))
+repay_cols[1].metric(label="Monthly Loan Payment", value=format_inr(monthly_payment))
 
 # === Section 4: Net Income ===
 st.divider()
 st.subheader("💼 Net Income Summary")
 income_cols = st.columns(2)
-income_cols[0].metric(label="Monthly Net Income", value=f"₹{monthly_income:,.0f}")
-income_cols[1].metric(label="Annual Net Income", value=f"₹{annual_income:,.0f}")
+income_cols[0].metric(label="Monthly Net Income", value=format_inr(monthly_income))
+income_cols[1].metric(label="Annual Net Income", value=format(annual_income))
 
 # === Section 5: ROI and IRR ===
 st.divider()
@@ -135,7 +158,7 @@ fig.add_trace(go.Bar(
     y=[revenue_per_year],
     name="Revenue",
     marker_color='green',
-    text=[f'₹{revenue_per_year:,.0f}'],
+    text=[format_inr(revenue_per_year)],
     textposition='outside'
 ))
 fig.add_trace(go.Bar(
@@ -143,7 +166,7 @@ fig.add_trace(go.Bar(
     y=[working_cost_annual + annual_payment],
     name="Costs",
     marker_color='red',
-    text=[f'₹{working_cost_annual + annual_payment:,.0f}'],
+    text=[format_inr(working_cost_annual + annual_payment)],
     textposition='outside'
 ))
 fig.update_layout(
@@ -197,8 +220,8 @@ land_factored_cost = total_cost + (4 * cost_per_acre * total_mw)
 after_loan_cost = land_factored_cost - loan_amount
 land_cols = st.columns(3)
 
-land_cols[0].metric(label="Total Cost of Project with Land Factor", value=f"₹{land_factored_cost:,.0f}")
-land_cols[1].metric(label="Total Cost of Project after Loan", value=f"₹{after_loan_cost:,.0f}")
+land_cols[0].metric(label="Total Cost of Project with Land Factor", value=format_inr(land_factored_cost))
+land_cols[1].metric(label="Total Cost of Project after Loan", value=format_inr(after_loan_cost))
 
 # === Section 7: Efficiency Loss ===
 
