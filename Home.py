@@ -60,7 +60,7 @@ electricity_cost = st.sidebar.slider(
 # --- Debt Inputs ---
 st.sidebar.subheader("🏦 Debt")
 cost_per_mw = st.sidebar.slider(
-    'Cost per MW (₹)', min_value=35000000, max_value=50000000, value=35000000, step=1000000
+    'Cost per MW (₹)', min_value=25000000, max_value=50000000, value=35000000, step=1000000
 )
 debt_percent = st.sidebar.slider(
     "Debt Percentage of Total Cost (%)", min_value=0, max_value=100, value=80
